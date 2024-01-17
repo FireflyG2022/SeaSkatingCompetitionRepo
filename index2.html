@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tablica Wyników</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      button {
+        margin: 5px;
+      }
+
+      .gold {
+        background-color: gold;
+      }
+
+      .silver {
+        background-color: silver;
+      }
+
+      .bronze {
+        background-color: #cd7f32;
+      }
+    </style>
+  </head>
+  <body>
+    <table id="tablica">
+      <thead>
+        <tr>
+          <th>Miejsce</th>
+          <th>Zawodnik</th>
+          <th>Punkty</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button onclick="dodajZawodnika()">Dodaj zawodnika</button>
+    <button onclick="usunZawodnika()">Usun zawodnika</button>
+    <button onclick="sortujWyniki()">Sortuj wyniki</button>
+    <button onclick="wypiszMiejsca()">Wypisz miejsca</button>
+    <button onclick="eksportujDoPliku()">Eksportuj do pliku</button>
+    <button onclick="importujZPliku()">Importuj z pliku</button>
+    <button onclick="zmianaPunktow()">Zmien ilosc punktów</button>
+    <button onclick="drukuj()">Drukuj tabelę</button>
+
+    <script>
+      let zawodnicy = [];
+
+      function dodajZawodnika() {
+        const imie = prompt("Podaj  zawodnika:");
+        const punkty = parseInt(prompt("Podaj ilość punktów:"));
+
+        zawodnicy.push({ imie, punkty });
+        odswiezTabele();
+      }
+
+      function sortujWyniki() {
+        zawodnicy.sort((a, b) => b.punkty - a.punkty);
+      }
+      function usunZawodnika() {
+        const imie = prompt("Podaj zawodnika do usunięcia:");
+        const index = zawodnicy.findIndex((zawodnik) => zawodnik.imie === imie);
+        if (index !== -1) {
+          zawodnicy.splice(index, 1);
+          odswiezTabele();
+        } else {
+          alert("Nie znaleziono zawodnika o podanym imieniu.");
+        }
+      }
+      function wypiszMiejsca() {
+        const tabela = document
+          .getElementById("tablica")
+          .getElementsByTagName("tbody")[0];
+        tabela.innerHTML = "";
+
+        sortujWyniki();
+
+        zawodnicy.forEach((zawodnik, index) => {
+          const row = tabela.insertRow();
+          const miejsceCell = row.insertCell(0);
+          const imieCell = row.insertCell(1);
+          const punktyCell = row.insertCell(2);
+
+          miejsceCell.textContent = index + 1;
+          imieCell.textContent = zawodnik.imie;
+          punktyCell.textContent = zawodnik.punkty;
+
+          switch (index) {
+            case 0:
+              row.classList.add("gold");
+              break;
+            case 1:
+              row.classList.add("silver");
+              break;
+            case 2:
+              row.classList.add("bronze");
+              break;
+          }
+        });
+      }
+
+      function eksportujDoPliku() {
+        const now = new Date();
+        const rok = now.getFullYear();
+        const miesiac = String(now.getMonth() + 1).padStart(2, "0");
+        const dzien = String(now.getDate()).padStart(2, "0");
+        const godzina = String(now.getHours()).padStart(2, "0");
+        const minuta = String(now.getMinutes()).padStart(2, "0");
+
+        const timestamp = `${rok}-${miesiac}-${dzien}-${godzina}-${minuta}`;
+        const nazwaPliku = `tablica_wynikow_${timestamp}.json`;
+
+        const zawartosc = JSON.stringify(zawodnicy);
+        const blob = new Blob([zawartosc], { type: "application/json" });
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = nazwaPliku;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      function importujZPliku() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+
+        input.addEventListener("change", (event) => {
+          const plik = event.target.files[0];
+
+          if (plik) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              zawodnicy = JSON.parse(e.target.result);
+              odswiezTabele();
+            };
+            reader.readAsText(plik);
+          }
+        });
+
+        input.click();
+      }
+
+      function odswiezTabele() {
+        wypiszMiejsca();
+      }
+      function zmienPunkty() {
+        const imie = prompt("Podaj zawodnika, którego punkty chcesz zmienić:");
+        const zawodnik = zawodnicy.find((z) => z.imie === imie);
+        if (zawodnik) {
+          const nowePunkty = parseInt(
+            prompt("Podaj ile punktow zdobyl zawodnik")
+          );
+          if (!isNaN(nowePunkty)) {
+            zawodnik.punkty = zawodnik.punkty + nowePunkty;
+            odswiezTabele();
+          } else {
+            alert("Proszę podać prawidłową liczbę punktów.");
+          }
+        } else {
+          alert("Nie znaleziono zawodnika o podanym imieniu.");
+        }
+      }
+      function zmianaPunktow() {
+        zmienPunkty();
+        odswiezTabele();
+      }
+      function drukujTabele() {
+        const tablica = document.getElementById("tablica");
+        const oknoDruku = window.open("", "_blank");
+        oknoDruku.document.write(
+          "<html><head><title>Drukuj Tablicę Wyników</title></head><body>"
+        );
+        oknoDruku.document.write(tablica.outerHTML);
+        oknoDruku.document.write("</body></html>");
+        oknoDruku.document.close();
+        oknoDruku.print();
+      }
+      function drukuj() {
+        sortujWyniki();
+        drukujTabele();
+      }
+    </script>
+  </body>
+</html>
