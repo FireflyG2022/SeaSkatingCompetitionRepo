@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      /* Stylowanie */
+      body {
+        font-family: Arial, sans-serif;
+      }
+      /* Dodaj inne style według potrzeb */
+    </style>
+    <title>Konkurencja Slide</title>
+  </head>
+  <body>
+    <h1>Konkurencja Slide</h1>
+    <form id="trickForm">
+      <label for="contestantName">Zawodnik:</label>
+      <input type="text" id="contestantName" required />
+      <label for="trickName">Nazwa triku:</label>
+      <input type="text" id="trickName" required />
+
+      <label for="trickLength">Długość triku (w metrach):</label>
+      <input type="number" id="trickLength" step="0.01" required />
+
+      <label for="trickStyle">Styl triku:</label>
+      <select id="trickStyle">
+        <option value="one">1</option>
+        <option value="two">2</option>
+        <option value="three">3</option>
+        <option value="four">4</option>
+        <option value="five">5</option>
+      </select>
+      <label for="trickFluency">Płynność triku:</label>
+      <select id="trickFluency">
+        <option value="one">1</option>
+        <option value="two">2</option>
+        <option value="three">3</option>
+        <option value="four">4</option>
+        <option value="five">5</option>
+      </select>
+      <label for="trickBackwards">Jazda tyłem:</label>
+      <input type="checkbox" id="trickBackwards" />
+
+      <label for="trickFullStop">Zatrzymanie full stop:</label>
+      <input type="checkbox" id="trickFullStop" />
+
+      <button type="button" onclick="calculatePoints()">Oblicz punkty</button>
+      <div id="results"></div>
+    </form>
+
+    <div id="result"></div>
+
+    <table id="scoreTable" border="1">
+      <tr>
+        <th>Zawodnik</th>
+        <th>1 przejazd</th>
+        <th>2 przejazd</th>
+        <th>3 przejazd</th>
+        <th>4 przejazd</th>
+        <th>5 przejazd</th>
+        <th>6 przejazd</th>
+        <th>Suma</th>
+      </tr>
+    </table>
+
+    <script>
+      // Logika JavaScript
+      function calculatePoints() {
+        const trickName = document.getElementById("trickName").value;
+        const trickLength = parseFloat(
+          document.getElementById("trickLength").value
+        );
+        const trickStyle = document.getElementById("trickStyle").value;
+        const trickBackwards =
+          document.getElementById("trickBackwards").checked;
+        const trickFullStop = document.getElementById("trickFullStop").checked;
+        const contestantName = document.getElementById("contestantName").value;
+        const trickFluency = document.getElementById("trickFluency").value;
+        const results = document.getElementById("results");
+
+        // Oblicz punkty na podstawie długości triku
+        let points = 0;
+        if (
+          (trickName == "TT Unity" && trickLength == 1) ||
+          (trickName == "TT Savannah" && trickLength == 1)
+        ) {
+          points += 75; // Przykładowa liczba punktów
+        } else if (
+          (trickName == "TT Unity" && trickLength >= 2) ||
+          (trickName == "TT Savannah" && trickLength >= 2)
+        ) {
+          points += 85;
+        }
+        if (
+          (trickName == "HT Unity" && trickLength == 1) ||
+          (trickName == "HT Savannah" && trickLength == 1)
+        ) {
+          points += 75; // Przykładowa liczba punktów
+        } else if (
+          (trickName == "HT Unity" && trickLength >= 2) ||
+          (trickName == "HT Savannah" && trickLength >= 2)
+        ) {
+          points += 85;
+        }
+        if (
+          (trickName == "TH Unity" && trickLength == 1) ||
+          (trickName == "TH Savannah" && trickLength == 1)
+        ) {
+          points += 75; // Przykładowa liczba punktów
+        } else if (
+          (trickName == "TH Unity" && trickLength >= 2) ||
+          (trickName == "TH Savannah" && trickLength >= 2)
+        ) {
+          points += 85;
+        }
+        if (
+          (trickName == "HH Unity" && trickLength == 1) ||
+          (trickName == "HH Savannah" && trickLength == 1)
+        ) {
+          points += 75; // Przykładowa liczba punktów
+        } else if (
+          (trickName == "HH Unity" && trickLength >= 2) ||
+          (trickName == "HH Savannah" && trickLength >= 2)
+        ) {
+          points += 85;
+        }
+        if (trickName == "Cross Parallel" && trickLength == 1) {
+          points += 50;
+        } else if (trickName == "Cros Parallel" && trickLength >= 2) {
+          points += 60;
+        }
+        if (trickName == "Back Slide" && trickLength == 1) {
+          points += 50;
+        } else if (trickName == "Back Slide" && trickLength >= 2) {
+          points += 59;
+        }
+        if (trickName == "Fast Slide" && trickLength == 1) {
+          points += 50;
+        } else if (trickName == "Fast Slide" && trickLength >= 2) {
+          points += 59;
+        }
+        if (
+          (trickName == "TT Parallel" && trickLength == 1) ||
+          (trickName == "HT Parallel" && trickLength == 1) ||
+          (trickName == "TH Parallel" && trickLength == 1) ||
+          (trickName == "HH Parallel" && trickLength == 1)
+        ) {
+          points += 45;
+        } else if (
+          (trickName == "TT Parallel" && trickLength >= 2) ||
+          (trickName == "HT Parallel" && trickLength >= 2) ||
+          (trickName == "TH Parallel" && trickLength >= 2) ||
+          (trickName == "HH Parallel" && trickLength >= 2)
+        ) {
+          points += 54;
+        }
+        if (
+          (trickName == "Unity" && trickLength == 1) ||
+          (trickName == "Savannah" && trickLength == 1)
+        ) {
+          points += 40;
+        } else if (
+          (trickName == "Unity" && trickLength >= 2) ||
+          (trickName == "Savannah" && trickLength >= 2)
+        ) {
+          points += 48;
+        }
+        if (trickName == "Ufo Special" && trickLength == 1) {
+          points += 38;
+        } else if (trickName == "Ufo Special" && trickLength >= 2) {
+          points += 46;
+        }
+        if (trickName == "TT Barrow" && trickLength == 1) {
+          points += 35;
+        } else if (trickName == "TT Barrow" && trickLength >= 2) {
+          points += 39;
+        }
+        if (trickName == "HT Soul" && trickLength == 1) {
+          points += 35;
+        } else if (trickName == "HT Soul" && trickLength >= 2) {
+          points += 39;
+        }
+        if (trickName == "TT Soul" && trickLength == 1) {
+          points += 25;
+        } else if (trickName == "TT Soul" && trickLength >= 2) {
+          points += 30;
+        }
+        if (trickName == "HH Barrow" && trickLength == 1) {
+          points += 24;
+        } else if (trickName == "HH Barrow" && trickLength >= 2) {
+          points += 28;
+        }
+        if (trickName == "Star Wheeling" && trickLength == 1) {
+          points += 18;
+        } else if (trickName == "Star Wheeling" && trickLength >= 2) {
+          points += 22;
+        }
+        if (trickName == "Cross Acid Wheeling" && trickLength == 1) {
+          points += 16;
+        } else if (trickName == "Cross Acid Wheeling" && trickLength >= 2) {
+          points += 20;
+        }
+        if (trickName == "Soyal" && trickLength == 1) {
+          points += 15;
+        } else if (trickName == "Soyal" && trickLength >= 2) {
+          points += 19;
+        }
+        if (trickName == "Soyal Wheeling" && trickLength == 1) {
+          points += 14;
+        } else if (trickName == "Soyal Wheeling" && trickLength >= 2) {
+          points += 18;
+        }
+        if (trickName == "Parallel" && trickLength == 1) {
+          points += 13;
+        } else if (trickName == "Parallel" && trickLength >= 2) {
+          points += 20;
+        }
+        if (trickName == "Cross Acid" && trickLength == 1) {
+          points += 13;
+        } else if (trickName == "Cross Acid" && trickLength >= 2) {
+          points += 15;
+        }
+        if (trickName == "Barrow Wheeling" && trickLength == 1) {
+          points += 12;
+        } else if (trickName == "Barrow Wheeling" && trickLength >= 2) {
+          points += 15;
+        }
+        if (trickName == "Barrow" && trickLength == 1) {
+          points += 11;
+        } else if (trickName == "Barrow" && trickLength >= 2) {
+          points += 14;
+        }
+        if (trickName == "Star" && trickLength == 1) {
+          points += 11;
+        } else if (trickName == "Star" && trickLength >= 2) {
+          points += 14;
+        }
+        if (trickName == "Acid Wheeling" && trickLength == 1) {
+          points += 11;
+        } else if (trickName == "Acid Wheeling" && trickLength >= 2) {
+          points += 15;
+        }
+        if (trickName == "Magic" && trickLength == 1) {
+          points += 11;
+        } else if (trickName == "Magic" && trickLength >= 2) {
+          points += 18;
+        }
+        if (trickName == "Soul Wheeling" && trickLength == 1) {
+          points += 8;
+        } else if (trickName == "Soul Wheeling" && trickLength >= 2) {
+          points += 11;
+        }
+        if (trickName == "Acid" && trickLength == 1) {
+          points += 8;
+        } else if (trickName == "Acid" && trickLength >= 2) {
+          points += 10;
+        }
+        if (trickName == "Powerslide Wheeling" && trickLength == 1) {
+          points += 8;
+        } else if (trickName == "Powerslide Wheeling" && trickLength >= 2) {
+          points += 11;
+        }
+        if (trickName == "Powerslide" && trickLength == 1) {
+          points += 5;
+        } else if (trickName == "Powerslide" && trickLength >= 2) {
+          points += 7;
+        }
+        if (trickName == "Soul" && trickLength == 1) {
+          points += 5;
+        } else if (trickName == "Soul" && trickLength >= 2) {
+          points += 7;
+        }
+        if (
+          (trickName == "TT Magic" && trickLength == 1) ||
+          (trickName == "HT Magic" && trickLength == 1) ||
+          (trickName == "TH Magic" && trickLength == 1) ||
+          (trickName == "HH Magic" && trickLength == 1)
+        ) {
+          points += 25;
+        } else if (
+          (trickName == "TT Magic" && trickLength >= 2) ||
+          (trickName == "HT Magic" && trickLength >= 2) ||
+          (trickName == "TH Magic" && trickLength >= 2) ||
+          (trickName == "HH Magic" && trickLength >= 2)
+        ) {
+          points += 30;
+        }
+        if (
+          (trickName == "HT Cross Acid" && trickLength == 1) ||
+          (trickName == "TT Cross Acid" && trickLength == 1)
+        ) {
+          points += 34;
+        } else if (
+          (trickName == "HT Cross Acid" && trickLength >= 2) ||
+          (trickName == "TT Cross Acid" && trickLength >= 2)
+        ) {
+          points += 38;
+        }
+        if (
+          (trickName == "HT Acid" && trickLength == 1) ||
+          (trickName == "TT Acid" && trickLength == 1)
+        ) {
+          points += 27;
+        } else if (
+          (trickName == "HT Acid" && trickLength >= 2) ||
+          (trickName == "TT Acid" && trickLength >= 2)
+        ) {
+          points += 31;
+        }
+        if (
+          (trickName == "HT Soyal" && trickLength == 1) ||
+          (trickName == "TT Soyal" && trickLength == 1)
+        ) {
+          points += 27;
+        } else if (
+          (trickName == "HT Soyal" && trickLength >= 2) ||
+          (trickName == "TT Soyal" && trickLength >= 2)
+        ) {
+          points += 30;
+        }
+        //dla najazdu tyłem
+        if (
+          (trickName == "TT Unity" && trickBackwards == true) ||
+          (trickName == "TT Savannah" && trickBackwards == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (
+          (trickName == "HT Unity" && trickBackwards == true) ||
+          (trickName == "HT Savannah" && trickBackwards == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (
+          (trickName == "TH Unity" && trickBackwards == true) ||
+          (trickName == "TH Savannah" && trickBackwards == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (
+          (trickName == "HH Unity" && trickBackwards == true) ||
+          (trickName == "HH Savannah" && trickBackwards == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (trickName == "Cross Parallel" && trickBackwards == true) {
+          points += 7;
+        }
+        if (trickName == "Back Slide" && trickBackwards == true) {
+          points += 10;
+        }
+        if (trickName == "Fast Slide" && trickBackwards == true) {
+          points += 5;
+        }
+        if (
+          (trickName == "TT Parallel" && trickBackwards == true) ||
+          (trickName == "HT Parallel" && trickBackwards == true) ||
+          (trickName == "TH Parallel" && trickBackwards == true) ||
+          (trickName == "HH Parallel" && trickBackwards == true)
+        ) {
+          points += 8;
+        }
+        if (
+          (trickName == "Unity" && trickBackwards == true) ||
+          (trickName == "Savannah" && trickBackwards == true)
+        ) {
+          points += 7;
+        }
+        if (trickName == "Ufo Special" && trickBackwards == true) {
+          points += 7;
+        }
+        if (trickName == "TT Barrow" && trickBackwards == true) {
+          points += 10;
+        }
+        if (trickName == "HT Soul" && trickBackwards == true) {
+          points += 10;
+        }
+        if (trickName == "TT Soul" && trickBackwards == true) {
+          points += 8;
+        }
+        if (trickName == "HH Barrow" && trickBackwards == true) {
+          points += 8;
+        }
+        if (trickName == "Star Wheeling" && trickBackwards == true) {
+          points += 0;
+        }
+        if (trickName == "Cross Acid Wheeling" && trickBackwards == true) {
+          points += 8;
+        }
+        if (trickName == "Soyal" && trickBackwards == true) {
+          points += 0;
+        }
+        if (trickName == "Soyal Wheeling" && trickBackwards == true) {
+          points += 0;
+        }
+        if (trickName == "Parallel" && trickBackwards == true) {
+          points += 4;
+        }
+        if (trickName == "Cross Acid" && trickBackwards == true) {
+          points += 6;
+        }
+        if (trickName == "Barrow Wheeling" && trickBackwards == true) {
+          points += 7;
+        }
+        if (trickName == "Barrow" && trickBackwards == true) {
+          points += 7;
+        }
+        if (trickName == "Star" && trickBackwards == true) {
+          points += 0;
+        }
+        if (trickName == "Acid Wheeling" && trickBackwards == true) {
+          points += 5;
+        }
+        if (trickName == "Magic" && trickBackwards == true) {
+          points += 2;
+        }
+        if (trickName == "Soul Wheeling" && trickBackwards == true) {
+          points += 2;
+        }
+        if (trickName == "Acid" && trickBackwards == true) {
+          points += 3;
+        }
+        if (trickName == "Powerslide Wheeling" && trickBackwards == true) {
+          points += 0;
+        }
+        if (trickName == "Powerslide" && trickBackwards == true) {
+          points += 0;
+        }
+        if (trickName == "Soul" && trickBackwards == true) {
+          points += 2;
+        }
+        if (
+          (trickName == "TT Magic" && trickBackwards == true) ||
+          (trickName == "HT Magic" && trickBackwards == true) ||
+          (trickName == "TH Magic" && trickBackwards == true) ||
+          (trickName == "HH Magic" && trickBackwards == true)
+        ) {
+          points += 6;
+        }
+        if (
+          (trickName == "HT Cross Acid" && trickBackwards == true) ||
+          (trickName == "TT Cross Acid" && trickBackwards == true)
+        ) {
+          points += 10;
+        }
+        if (
+          (trickName == "HT Acid" && trickBackwards == true) ||
+          (trickName == "TT Acid" && trickBackwards == true)
+        ) {
+          points += 8;
+        }
+        if (
+          (trickName == "HT Soyal" && trickBackwards == true) ||
+          (trickName == "TT Soyal" && trickBackwards == true)
+        ) {
+          points += 0;
+        }
+        //fullstop
+        if (
+          (trickName == "TT Unity" && trickFullStop == true) ||
+          (trickName == "TT Savannah" && trickFullStop == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (
+          (trickName == "HT Unity" && trickFullStop == true) ||
+          (trickName == "HT Savannah" && trickFullStop == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (
+          (trickName == "TH Unity" && trickFullStop == true) ||
+          (trickName == "TH Savannah" && trickFullStop == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (
+          (trickName == "HH Unity" && trickFullStop == true) ||
+          (trickName == "HH Savannah" && trickFullStop == true)
+        ) {
+          points += 7; // Przykładowa liczba punktów
+        }
+        if (trickName == "Cross Parallel" && trickFullStop == true) {
+          points += 8;
+        }
+        if (trickName == "Back Slide" && trickFullStop == true) {
+          points += 10;
+        }
+        if (trickName == "Fast Slide" && trickFullStop == true) {
+          points += 10;
+        }
+        if (
+          (trickName == "TT Parallel" && trickFullStop == true) ||
+          (trickName == "HT Parallel" && trickFullStop == true) ||
+          (trickName == "TH Parallel" && trickFullStop == true) ||
+          (trickName == "HH Parallel" && trickFullStop == true)
+        ) {
+          points += 8;
+        }
+        if (
+          (trickName == "Unity" && trickFullStop == true) ||
+          (trickName == "Savannah" && trickFullStop == true)
+        ) {
+          points += 5;
+        }
+        if (trickName == "Ufo Special" && trickFullStop == true) {
+          points += 6;
+        }
+        if (trickName == "TT Barrow" && trickFullStop == true) {
+          points += 10;
+        }
+        if (trickName == "HT Soul" && trickFullStop == true) {
+          points += 8;
+        }
+        if (trickName == "TT Soul" && trickFullStop == true) {
+          points += 6;
+        }
+        if (trickName == "HH Barrow" && trickFullStop == true) {
+          points += 7;
+        }
+        if (trickName == "Star Wheeling" && trickFullStop == true) {
+          points += 5;
+        }
+        if (trickName == "Cross Acid Wheeling" && trickFullStop == true) {
+          points += 3;
+        }
+        if (trickName == "Soyal" && trickFullStop == true) {
+          points += 4;
+        }
+        if (trickName == "Soyal Wheeling" && trickFullStop == true) {
+          points += 4;
+        }
+        if (trickName == "Parallel" && trickFullStop == true) {
+          points += 2;
+        }
+        if (trickName == "Cross Acid" && trickFullStop == true) {
+          points += 2;
+        }
+        if (trickName == "Barrow Wheeling" && trickFullStop == true) {
+          points += 4;
+        }
+        if (trickName == "Barrow" && trickFullStop == true) {
+          points += 4;
+        }
+        if (trickName == "Star" && trickFullStop == true) {
+          points += 4;
+        }
+        if (trickName == "Acid Wheeling" && trickFullStop == true) {
+          points += 4;
+        }
+        if (trickName == "Magic" && trickFullStop == true) {
+          points += 1;
+        }
+        if (trickName == "Soul Wheeling" && trickFullStop == true) {
+          points += 1;
+        }
+        if (trickName == "Acid" && trickFullStop == true) {
+          points += 1;
+        }
+        if (trickName == "Powerslide Wheeling" && trickFullStop == true) {
+          points += 1;
+        }
+        if (trickName == "Powerslide" && trickFullStop == true) {
+          points += 1;
+        }
+        if (trickName == "Soul" && trickFullStop == true) {
+          points += 1;
+        }
+        if (
+          (trickName == "TT Magic" && trickFullStop == true) ||
+          (trickName == "HT Magic" && trickFullStop == true) ||
+          (trickName == "TH Magic" && trickFullStop == true) ||
+          (trickName == "HH Magic" && trickFullStop == true)
+        ) {
+          points += 5;
+        }
+        if (
+          (trickName == "HT Cross Acid" && trickFullStop == true) ||
+          (trickName == "TT Cross Acid" && trickFullStop == true)
+        ) {
+          points += 6;
+        }
+        if (
+          (trickName == "HT Acid" && trickFullStop == true) ||
+          (trickName == "TT Acid" && trickFullStop == true)
+        ) {
+          points += 6;
+        }
+        if (
+          (trickName == "HT Soyal" && trickFullStop == true) ||
+          (trickName == "TT Soyal" && trickFullStop == true)
+        ) {
+          points += 7;
+        }
+        //styl
+        if (trickStyle === "one") {
+          points += 1;
+        } else if (trickStyle === "two") {
+          points += 2;
+        } else if (trickStyle === "three") {
+          points += 3;
+        } else if (trickStyle === "four") {
+          points += 4;
+        } else if (trickStyle === "five") {
+          points += 5;
+        }
+        if (trickFluency === "one") {
+          points += 1;
+        } else if (trickFluency === "two") {
+          points += 2;
+        } else if (trickFluency === "three") {
+          points += 3;
+        } else if (trickFluency === "four") {
+          points += 4;
+        } else if (trickFluency === "five") {
+          points += 5;
+        }
+        // Znajdź tabelę wyników
+        const scoreTable = document.getElementById("scoreTable");
+
+        // Sprawdź, czy istnieje już wpis dla tego zawodnika
+        let existingRow = null;
+        for (let i = 1; i < scoreTable.rows.length; i++) {
+          const row = scoreTable.rows[i];
+          if (row.cells[0].innerHTML === contestantName) {
+            existingRow = row;
+            break;
+          }
+        }
+
+        // Jeśli nie ma istniejącego wiersza, dodaj nowy
+        if (!existingRow) {
+          existingRow = scoreTable.insertRow(-1);
+          const cell0 = existingRow.insertCell(0);
+          cell0.innerHTML = contestantName;
+          for (let i = 1; i <= 6; i++) {
+            existingRow.insertCell(i).innerHTML = "-";
+          }
+          existingRow.insertCell(7).innerHTML = 0; // Suma punktów
+        }
+
+        // Znajdź pierwszą pustą komórkę w wierszu
+        let emptyCellIndex = null;
+        for (let i = 1; i <= 6; i++) {
+          if (existingRow.cells[i].innerHTML === "-") {
+            emptyCellIndex = i;
+            break;
+          }
+        }
+
+        // Dodaj punkty do odpowiedniej komórki
+        existingRow.cells[emptyCellIndex].innerHTML = points;
+
+        // Oblicz sumę punktów z 4 najlepszych przejazdów
+        const scores = [];
+        for (let i = 1; i <= 6; i++) {
+          const score = existingRow.cells[i].innerHTML;
+          if (score !== "-") {
+            scores.push(parseInt(score));
+          }
+        }
+        scores.sort((a, b) => b - a);
+        const sum = scores.slice(0, 4).reduce((a, b) => a + b, 0);
+
+        // Zaktualizuj sumę punktów w ostatniej komórce
+        existingRow.cells[7].innerHTML = sum;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Freeskate</title>
+    <style>
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        text-align: center;
+      }
+
+      input,
+      button {
+        margin-bottom: 10px;
+      }
+
+      #results {
+        margin-top: 20px;
+      }
+
+      #results table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      #results th,
+      #results td {
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+
+      #results th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Freeskate</h2>
+      <div id="input-section">
+        <input type="text" id="name" placeholder="Enter name" />
+        <input type="number" id="time" placeholder="Enter time" />
+        <input
+          type="number"
+          id="startPoints"
+          min="0"
+          max="15"
+          placeholder="Za start (0-15)"
+        />
+        <input
+          type="number"
+          id="turnPoints"
+          placeholder="Za zakręty (0-15)"
+          min="0"
+          max="15"
+        />
+        <input
+          type="number"
+          id="techniquePoints"
+          min="0"
+          max="100"
+          placeholder="Za technikę (0-100)"
+        />
+        <button onclick="addPlayer()">Dodaj zawodnika</button>
+      </div>
+      <div id="players"></div>
+      <button onclick="calculatePoints()">Oblicz punkty</button>
+
+      <div id="results"></div>
+    </div>
+    <script>
+      let players = []; // Przechowuje dane graczy
+
+      function addPlayer() {
+        const nameInput = document.getElementById("name");
+        const timeInput = document.getElementById("time");
+        const startPointsInput = document.getElementById("startPoints");
+        const turnPointsInput = document.getElementById("turnPoints");
+        const techniquePointsInput = document.getElementById("techniquePoints");
+
+        const name = nameInput.value.trim();
+        const time = parseFloat(timeInput.value.trim());
+        const startPoints = parseInt(startPointsInput.value.trim());
+        const turnPoints = parseInt(turnPointsInput.value.trim());
+        const techniquePoints = parseInt(techniquePointsInput.value.trim());
+
+        if (name && time) {
+          players.push({
+            name,
+            time,
+            startPoints,
+            turnPoints,
+            techniquePoints,
+            qualificationPoints: 0,
+            finalPoints: 0,
+            fairPlayPoints: 0, // Dodana zmienna FairPlayPoints dla każdego gracza
+          });
+          renderPlayers();
+          nameInput.value = "";
+          timeInput.value = "";
+          startPointsInput.value = "";
+          turnPointsInput.value = "";
+          techniquePointsInput.value = "";
+        } else {
+          alert("Proszę uzupełnić pola");
+        }
+      }
+
+      function renderPlayers() {
+        const playersDiv = document.getElementById("players");
+        playersDiv.innerHTML = "";
+
+        players.forEach((player, index) => {
+          const playerDiv = document.createElement("div");
+          playerDiv.textContent = `${index + 1}. ${
+            player.name
+          } - ${player.time.toFixed(2)}s`;
+          playersDiv.appendChild(playerDiv);
+        });
+      }
+
+      function calculatePoints() {
+        players.sort((a, b) => a.time - b.time);
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+
+        const table = document.createElement("table");
+        const headerRow = document.createElement("tr");
+        const headers = [
+          "Miejsce",
+          "Zawodnik",
+          "Czas",
+          "Punkty kwalifikacyjne",
+          "Punkty za start (0-15)",
+          "Punkty za zakręty (0-15)",
+          "Punkty za technikę pokonywania (0-100)",
+        ];
+        headers.forEach((headerText) => {
+          const th = document.createElement("th");
+          th.textContent = headerText;
+          headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        for (let i = 0; i < players.length; i++) {
+          const player = players[i];
+          const tr = document.createElement("tr");
+          const placeTd = document.createElement("td");
+          const nameTd = document.createElement("td");
+          const timeTd = document.createElement("td");
+          const qualificationPointsTd = document.createElement("td");
+          const turnPointsTd = document.createElement("td");
+          const techniquePointsTd = document.createElement("td");
+          const startPointsTd = document.createElement("td");
+
+          placeTd.textContent = i + 1;
+          nameTd.textContent = player.name;
+          timeTd.textContent = player.time.toFixed(2) + "s";
+          turnPointsTd.textContent = player.turnPoints;
+          startPointsTd.textContent = player.startPoints;
+          techniquePointsTd.textContent = player.techniquePoints;
+          const qualificationPoints = 20 + (players.length - i - 1) * 5; // Nadajemy punkty zgodnie z zasadami
+
+          player.qualificationPoints = qualificationPoints; // Ustawiamy punkty kwalifikacyjne dla gracza
+          qualificationPointsTd.textContent = qualificationPoints + "pts";
+
+          tr.appendChild(placeTd);
+          tr.appendChild(nameTd);
+          tr.appendChild(timeTd);
+          tr.appendChild(qualificationPointsTd);
+          tr.appendChild(startPointsTd);
+          tr.appendChild(turnPointsTd);
+          tr.appendChild(techniquePointsTd);
+          table.appendChild(tr);
+        }
+
+        resultsDiv.appendChild(table);
+        createFinalGroups();
+      }
+      function createFinalGroups() {
+        const numPlayers = players.length;
+        const numGroups = Math.ceil(numPlayers / 4);
+        const finalGroups = [];
+
+        for (let i = 0; i < numGroups; i++) {
+          finalGroups.push([]);
+        }
+
+        let groupIndex = 0;
+        for (let i = 0; i < numPlayers; i++) {
+          finalGroups[groupIndex].push(players[i]);
+          groupIndex = (groupIndex + 1) % numGroups;
+        }
+
+        displayFinalGroups(finalGroups);
+      }
+      function displayFinalGroups(groups) {
+        const resultsDiv = document.getElementById("results");
+        const groupsDiv = document.createElement("div");
+        groupsDiv.innerHTML = "<h3>Grupy finałowe</h3>";
+
+        groups.forEach((group, index) => {
+          const groupHeader = document.createElement("h4");
+          groupHeader.textContent = `Grupy ${index + 1}`;
+          groupsDiv.appendChild(groupHeader);
+
+          const groupList = document.createElement("ul");
+          group.forEach((player) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = player.name;
+            groupList.appendChild(listItem);
+          });
+
+          groupsDiv.appendChild(groupList);
+        });
+
+        resultsDiv.appendChild(groupsDiv);
+      }
+
+      function submitFinalResults() {
+        finalResults = [];
+
+        for (let i = 0; i < players.length; i++) {
+          const name = players[i].name;
+          const result = prompt(`Wpisz rezultat finałowy  ${name}:`);
+          const fairPlayPoints = parseInt(
+            prompt(`Ocena Fair Play dla ${name} (0-15):`)
+          );
+          const qualificationPoints = players[i].qualificationPoints;
+          finalResults.push({
+            name,
+            result,
+            qualificationPoints,
+            fairPlayPoints,
+          });
+        }
+
+        calculateFinalPoints();
+      }
+
+      function calculateFinalPoints() {
+        finalResults.sort((a, b) => b.result - a.result);
+
+        let points = 100;
+        for (let i = 0; i < finalResults.length; i++) {
+          const player = finalResults[i];
+          player.points = points;
+          points -= 5;
+        }
+
+        for (let i = 0; i < players.length; i++) {
+          const playerName = players[i].name;
+          const foundPlayer = finalResults.find(
+            (player) => player.name === playerName
+          );
+          if (foundPlayer) {
+            players[i].finalPoints =
+              foundPlayer.points + foundPlayer.fairPlayPoints;
+          } else {
+            players[i].finalPoints = 0;
+          }
+        }
+
+        displayFinalResults();
+      }
+
+      function calculateFinalPoints() {
+        finalResults.sort((a, b) => b.result - a.result);
+
+        let points = 100;
+        for (let i = 0; i < finalResults.length; i++) {
+          const player = finalResults[i];
+          player.points = points;
+          points -= 5;
+        }
+
+        for (let i = 0; i < players.length; i++) {
+          const playerName = players[i].name;
+          const foundPlayer = finalResults.find(
+            (player) => player.name === playerName
+          );
+          if (foundPlayer) {
+            players[i].finalPoints = foundPlayer.points; // Dodajemy punkty fair play
+          } else {
+            players[i].finalPoints = 0;
+          }
+        }
+
+        displayFinalResults();
+      }
+
+      function displayFinalResults() {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+
+        const table = document.createElement("table");
+        const headerRow = document.createElement("tr");
+        const headers = [
+          "Miejsce",
+          "Zawodnik",
+          "Rezultat finałowy",
+          "Punkty za miejsce",
+          "Punkty z kwalifikacji",
+          "Punkty Fair Play", // Nowa kolumna
+          "Całkowite punkty",
+        ];
+        headers.forEach((headerText) => {
+          const th = document.createElement("th");
+          th.textContent = headerText;
+          headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        for (let i = 0; i < finalResults.length; i++) {
+          const player = finalResults[i];
+          const playerName = player.name;
+
+          const playerData = players.find((p) => p.name === playerName);
+
+          const totalPoints =
+            parseFloat(player.result) +
+            (playerData.finalPoints || 0) +
+            (playerData.qualificationPoints || 0) +
+            (player.fairPlayPoints || 0); // Dodajemy punkty fair play
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${playerName}</td>
+      <td>${player.result}</td>
+      <td>${playerData.finalPoints || 0}</td>
+      <td>${playerData.qualificationPoints || 0}</td>
+      <td>${player.fairPlayPoints || 0}</td>
+      <td>${totalPoints}</td>
+    `;
+          table.appendChild(tr);
+        }
+
+        resultsDiv.appendChild(table);
+      }
+    </script>
+    <button onclick="submitFinalResults()">Rezultaty finałowe</button>
+  </body>
+</html>

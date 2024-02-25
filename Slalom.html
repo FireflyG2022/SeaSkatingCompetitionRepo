@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slalom Competition Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+      }
+      input[type="number"],
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Slalom</h2>
+      <h3>Układ zawodnika</h3>
+      <input
+        type="text"
+        id="trickSearch"
+        oninput="filterTricks()"
+        placeholder="Search for Trick"
+      />
+      <select id="trickSelect">
+        <option value="0">[Wybierz trik]</option>
+        <option value="5">sitting fish</option>
+        <option value="6">small car 5w</option>
+        <option value="8">back small car 5w</option>
+        <option value="10">small car 2w</option>
+        <option value="12">back small car 2w</option>
+        <option value="16">cross small car 2w</option>
+        <option value="16">footgun</option>
+        <option value="17">back cross small car 2w</option>
+        <option value="18">back footgun</option>
+        <option value="22">heel toe christie</option>
+        <option value="23">heel toe back christie</option>
+        <option value="20">Christie</option>
+        <option value="21">flat tea pot</option>
+        <option value="22">back christie</option>
+        <option value="23">corvo</option>
+        <option value="23">russian corvo</option>
+        <option value="25">tea pot</option>
+        <option value="25">superman</option>
+        <option value="26">back corvo</option>
+        <option value="26">back russian corvo</option>
+        <option value="27">back superman</option>
+        <option value="27">back tea pot</option>
+        <option value="28">toe christie</option>
+        <option value="30">back toe christiw</option>
+        <!--jump-->
+        <option value="1">crab</option>
+        <option value="2">crab cross</option>
+        <option value="5">bicycle jump</option>
+        <option value="6">x jump</option>
+        <option value="8">foot spin</option>
+        <option value="10">special jumps</option>
+        <option value="12">double wipper</option>
+        <option value="12">back double wipper</option>
+        <option value="16">wipper</option>
+        <option value="18">back wipper</option>
+        <option value="20">Kazachok</option>
+        <option value="21">heel kazaspin</option>
+        <option value="22">Kazachok back</option>
+        <option value="24">kazaspin</option>
+        <option value="25">footgun footspin</option>
+        <option value="27">toe wipper</option>
+        <option value="28">heel wipper</option>
+        <option value="29">back toe wipper</option>
+        <option value="30">back heel wipper</option>
+        <!--flat wheeling-->
+        <option value="1">Fish</option>
+        <option value="2">Back Fish</option>
+        <option value="2">Snake</option>
+        <option value="3">Back Snake</option>
+        <option value="3">Cross</option>
+        <option value="4">Back Cross</option>
+        <option value="4">Shift Cross</option>
+        <option value="5">Backshift Cross</option>
+        <option value="5">One Foot</option>
+        <option value="6">Snake tt/ht/th/hh</option>
+        <option value="6">Cross tt/ht/th/hh</option>
+        <option value="6">scissors</option>
+        <option value="7">back snake tt/ht/th/hh</option>
+        <option value="8">Back cross tt/ht/th/hh</option>
+        <option value="8">One foot Back</option>
+        <option value="10">Infinite</option>
+        <option value="10">Back Infinite</option>
+        <option value="12">Fish leg</option>
+        <option value="12">Day night</option>
+        <option value="13">wheeling forward toe/heel</option>
+        <option value="15">Inverse/noviper</option>
+        <option value="18">back inverse</option>
+        <option value="18">back noviper</option>
+        <option value="20">wheeling backward toe/heel</option>
+        <option value="24">Day night wheeling</option>
+        <option value="24">Fish leg wheeling</option>
+        <option value="24">sweing machine</option>
+        <option value="26">Inverse/noviper wheeling</option>
+        <option value="28">Back inverse wheeling</option>
+        <option value="28">Back noviper wheeling</option>
+        <option value="30">diamond</option>
+        <!--others-->
+        <option value="3">Nelson</option>
+        <option value="4">Nelson back</option>
+        <option value="5">Reverse nelson</option>
+        <option value="5">Reverse nelson back</option>
+        <option value="6">Mega Nelson</option>
+        <option value="7">X</option>
+        <option value="7">Crazy</option>
+        <option value="6">Crazy forward</option>
+        <option value="6">Crazy backward</option>
+        <option value="8">Double crazy</option>
+        <option value="9">Double double crazy</option>
+        <option value="9">Double crazy moves</option>
+        <option value="10">Back double crazy</option>
+        <option value="10">Crazy leg</option>
+        <option value="10">Eight</option>
+        <option value="10">Back eight</option>
+        <option value="10">Pendulum</option>
+        <option value="10">Eagle</option>
+        <option value="13">Eagle cross</option>
+        <option value="15">Special</option>
+        <option value="17">X toe heel</option>
+        <option value="17">X heel toe</option>
+        <option value="19">X heel heel</option>
+        <option value="16">Brush</option>
+        <option value="15">Back brush</option>
+        <option value="18">Mega brush</option>
+        <option value="19">z</option>
+        <option value="20">toe wheeling eagle</option>
+        <option value="23">reverse cobra</option>
+        <option value="24">cobra</option>
+        <option value="26">back cobra</option>
+        <option value="28">owl</option>
+        <option value="29">butterfly</option>
+        <option value="30">flat butterfly</option>
+        <!--spin-->
+        <option value="3">Mabrouk</option>
+        <option value="4">Sun</option>
+        <option value="4">Mexican</option>
+        <option value="4">Crazy Sun</option>
+        <option value="4">Reverse Sun</option>
+        <option value="4">Italian</option>
+        <option value="6">Volt</option>
+        <option value="6">X Obrotowy</option>
+        <option value="5">X Chap Chap</option>
+        <option value="6">total cross</option>
+        <option value="10">Big volt</option>
+        <option value="9">Mabrouk heels toes</option>
+        <option value="10">2 feet spin</option>
+        <option value="10">J-turn</option>
+        <option value="10">Kręcioł tt/th/ht/hh</option>
+        <option value="10">russian toe heel</option>
+        <option value="12">X tt/th/ht/hh obrotowy</option>
+        <option value="12">kręcioł toe toe</option>
+        <option value="18">kręcioł tył</option>
+        <option value="16">reverse j-turn</option>
+        <option value="14">russian</option>
+        <option value="19">tts/hts/ths/hhs</option>
+        <option value="21">swan tt/th/ht/hh</option>
+        <option value="23">back tts/back hts</option>
+        <option value="22">one foot one cone</option>
+        <option value="24">One Cone 7/Chicken</option>
+        <option value="26">Footgun 7/ Footgun 7 back</option>
+        <option value="26">7/Chicken</option>
+        <option value="27">One Cone 7/Chicken Back</option>
+        <option value="28">7 Chicken Back</option>
+        <option value="29">corvo spin</option>
+        <option value="30">back corvo spin</option>
+      </select>
+      <input
+        type="number"
+        id="trickStability"
+        placeholder="Enter Trick Stability (0-5)"
+      />
+      <button onclick="addTrick()">Dodaj trik</button>
+
+      <h3>Wyniki</h3>
+      <table id="trickTable">
+        <tr>
+          <th>Trik</th>
+          <th>Całkowite punkty</th>
+        </tr>
+      </table>
+
+      <h3>Dodatkowe punkty</h3>
+      <input
+        type="number"
+        id="stylePoints"
+        placeholder="Punkty za sty; (0-20)"
+      />
+      <input
+        type="number"
+        id="takeoffPoints"
+        placeholder="Enter Takeoff Points (0-5)"
+      />
+      <input
+        type="number"
+        id="funPoints"
+        placeholder="Punkty za fun i flow (0-10)"
+      />
+      <button onclick="calculateTotal()">Calculate Total Score</button>
+
+      <div class="result" id="totalScore"></div>
+
+      <h3>Leaderboard</h3>
+      <table id="leaderboard">
+        <tr>
+          <th>Player</th>
+          <th>Total Score</th>
+        </tr>
+      </table>
+    </div>
+
+    <script>
+      let tricks = [];
+      let leaderboard = [];
+
+      function addTrick() {
+        const trickSelect = document.getElementById("trickSelect");
+        const selectedTrick = trickSelect.options[trickSelect.selectedIndex];
+        const trickName = selectedTrick.text;
+        const trickPoints = parseInt(selectedTrick.value);
+        const trickStability = parseInt(
+          document.getElementById("trickStability").value
+        );
+
+        if (trickPoints && !isNaN(trickStability)) {
+          const totalPoints = trickPoints + trickStability;
+          tricks.push({ name: trickName, totalPoints: totalPoints });
+          updateTrickTable();
+          alert("Dodano trik!");
+        } else {
+          alert("Konieczne jest wybranie triku i wpisanie jego stabilności");
+        }
+      }
+
+      function updateTrickTable() {
+        const table = document.getElementById("trickTable");
+        while (table.rows.length > 1) {
+          table.deleteRow(1);
+        }
+        tricks.forEach((trick) => {
+          const row = table.insertRow();
+          const nameCell = row.insertCell(0);
+          const pointsCell = row.insertCell(1);
+          nameCell.textContent = trick.name;
+          pointsCell.textContent = trick.totalPoints;
+        });
+      }
+
+      function calculateTotal() {
+        const stylePoints = parseInt(
+          document.getElementById("stylePoints").value
+        );
+        const takeoffPoints = parseInt(
+          document.getElementById("takeoffPoints").value
+        );
+        const funPoints = parseInt(document.getElementById("funPoints").value);
+
+        if (!isNaN(stylePoints) && !isNaN(takeoffPoints) && !isNaN(funPoints)) {
+          const totalTrickPoints = tricks.reduce(
+            (acc, curr) => acc + curr.totalPoints,
+            0
+          );
+          const totalScore =
+            totalTrickPoints + stylePoints + takeoffPoints + funPoints;
+          document.getElementById(
+            "totalScore"
+          ).innerText = `Całkowity wynik: ${totalScore}`;
+          addToLeaderboard(totalScore);
+        } else {
+          alert("Wpisz kryteria oceniania:");
+        }
+      }
+
+      function addToLeaderboard(score) {
+        const playerName = prompt("Wpisz zawodnika:");
+        if (playerName) {
+          leaderboard.push({ player: playerName, score: score });
+          updateLeaderboard();
+        }
+      }
+
+      function updateLeaderboard() {
+        const table = document.getElementById("leaderboard");
+        // Clear existing rows
+        while (table.rows.length > 1) {
+          table.deleteRow(1);
+        }
+        // Sort leaderboard by score (descending)
+        leaderboard.sort((a, b) => b.score - a.score);
+        // Add rows to leaderboard table
+        leaderboard.forEach((entry) => {
+          const row = table.insertRow();
+          const nameCell = row.insertCell(0);
+          const scoreCell = row.insertCell(1);
+          nameCell.textContent = entry.player;
+          scoreCell.textContent = entry.score;
+        });
+      }
+
+      function filterTricks() {
+        const input = document
+          .getElementById("trickSearch")
+          .value.toLowerCase();
+        const select = document.getElementById("trickSelect");
+        for (let i = 0; i < select.options.length; i++) {
+          const option = select.options[i];
+          const text = option.text.toLowerCase();
+          if (text.includes(input)) {
+            option.style.display = "";
+          } else {
+            option.style.display = "none";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
