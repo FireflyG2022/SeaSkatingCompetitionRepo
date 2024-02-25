@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Slalom Competition Manager</title>
+    <title>Slalom</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -204,21 +204,22 @@
         id="trickStability"
         placeholder="Enter Trick Stability (0-5)"
       />
-      <button onclick="addTrick()">Dodaj trik</button>
+      <button onclick="addTrick()">Add Trick</button>
+      <button onclick="resetFields()">Reset</button>
 
-      <h3>Wyniki</h3>
+      <h3>Trick Scores</h3>
       <table id="trickTable">
         <tr>
-          <th>Trik</th>
-          <th>Całkowite punkty</th>
+          <th>Trick</th>
+          <th>Total Points</th>
         </tr>
       </table>
 
-      <h3>Dodatkowe punkty</h3>
+      <h3>Judge Criteria</h3>
       <input
         type="number"
         id="stylePoints"
-        placeholder="Punkty za sty; (0-20)"
+        placeholder="Enter Style Points (0-20)"
       />
       <input
         type="number"
@@ -228,17 +229,17 @@
       <input
         type="number"
         id="funPoints"
-        placeholder="Punkty za fun i flow (0-10)"
+        placeholder="Enter Fun & Flow Points (0-10)"
       />
-      <button onclick="calculateTotal()">Calculate Total Score</button>
+      <button onclick="calculateTotal()">Oblicz całkowity wynik</button>
 
       <div class="result" id="totalScore"></div>
 
       <h3>Leaderboard</h3>
       <table id="leaderboard">
         <tr>
-          <th>Player</th>
-          <th>Total Score</th>
+          <th>Zawodnik</th>
+          <th>Całkowity wynik</th>
         </tr>
       </table>
     </div>
@@ -260,9 +261,9 @@
           const totalPoints = trickPoints + trickStability;
           tricks.push({ name: trickName, totalPoints: totalPoints });
           updateTrickTable();
-          alert("Dodano trik!");
+          alert("Dodano trik!!!");
         } else {
-          alert("Konieczne jest wybranie triku i wpisanie jego stabilności");
+          alert("Wybierz trik i wpisz jego stabilność");
         }
       }
 
@@ -301,12 +302,12 @@
           ).innerText = `Całkowity wynik: ${totalScore}`;
           addToLeaderboard(totalScore);
         } else {
-          alert("Wpisz kryteria oceniania:");
+          alert("Wpisz oceny");
         }
       }
 
       function addToLeaderboard(score) {
-        const playerName = prompt("Wpisz zawodnika:");
+        const playerName = prompt("Wpisz zawodnika");
         if (playerName) {
           leaderboard.push({ player: playerName, score: score });
           updateLeaderboard();
@@ -345,6 +346,23 @@
             option.style.display = "none";
           }
         }
+      }
+
+      function resetFields() {
+        document.getElementById("trickSelect").selectedIndex = 0;
+        document.getElementById("trickStability").value = "";
+        document.getElementById("stylePoints").value = "";
+        document.getElementById("takeoffPoints").value = "";
+        document.getElementById("funPoints").value = "";
+        document.getElementById("totalScore").innerText = "";
+
+        // Clear trick table
+        const trickTable = document.getElementById("trickTable");
+        while (trickTable.rows.length > 1) {
+          trickTable.deleteRow(1);
+        }
+
+        tricks = []; // Clear tricks array
       }
     </script>
   </body>
