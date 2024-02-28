@@ -70,14 +70,18 @@
 
       function dodajZawodnika() {
         const imie = prompt("Podaj  zawodnika:");
-        const punkty = parseInt(prompt("Podaj ilość punktów:"));
-
-        zawodnicy.push({ imie, punkty });
+        const punktySlalom = parseInt(prompt("Podaj ilość punktów z slalomu:"));
+        const punktySlide = parseInt(prompt("Podaj ilość punktów z slide:"));
+        const punktyFreeskate = parseInt(
+          prompt("Podaj ilość punktów z freeskate")
+        );
+        var calkowitePunkty = punktySlalom + punktySlide + punktyFreeskate;
+        zawodnicy.push({ imie, calkowitePunkty });
         odswiezTabele();
       }
 
       function sortujWyniki() {
-        zawodnicy.sort((a, b) => b.punkty - a.punkty);
+        zawodnicy.sort((a, b) => b.calkowitePunkty - a.calkowitePunkty);
       }
       function usunZawodnika() {
         const imie = prompt("Podaj zawodnika do usunięcia:");
@@ -105,7 +109,7 @@
 
           miejsceCell.textContent = index + 1;
           imieCell.textContent = zawodnik.imie;
-          punktyCell.textContent = zawodnik.punkty;
+          punktyCell.textContent = zawodnik.calkowitePunkty;
 
           switch (index) {
             case 0:
@@ -175,7 +179,7 @@
             prompt("Podaj ile punktow zdobyl zawodnik")
           );
           if (!isNaN(nowePunkty)) {
-            zawodnik.punkty = zawodnik.punkty + nowePunkty;
+            zawodnik.calkowitePunkty = zawodnik.calkowitePunkty + nowePunkty;
             odswiezTabele();
           } else {
             alert("Proszę podać prawidłową liczbę punktów.");
