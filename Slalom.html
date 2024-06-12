@@ -242,6 +242,13 @@
           <th>Całkowity wynik</th>
         </tr>
       </table>
+      <button onclick="saveLeaderboard()">Save Leaderboard</button>
+      <input
+        type="file"
+        id="fileInput"
+        accept=".json"
+        onchange="loadLeaderboard(event)"
+      />
     </div>
 
     <script>
@@ -363,6 +370,33 @@
         }
 
         tricks = []; // Clear tricks array
+      }
+      function saveLeaderboard() {
+        const json = JSON.stringify(leaderboard, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        // Get the current date and format it as YYYY-MM-DD
+        const currentDate = new Date().toISOString().slice(0, 10);
+        const filename = `leaderboard_${currentDate}.json`;
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function loadLeaderboard(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            leaderboard = JSON.parse(e.target.result);
+            updateLeaderboard();
+          };
+          reader.readAsText(file);
+        }
       }
     </script>
   </body>
